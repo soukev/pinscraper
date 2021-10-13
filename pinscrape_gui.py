@@ -1,6 +1,7 @@
 from tkinter import *
 from PIL import ImageTk, Image
 import sqlite3
+import sys
 
 def back():
     global cur # current image index
