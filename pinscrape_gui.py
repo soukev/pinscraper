@@ -81,6 +81,9 @@ def main():
 
     images = []
     get_images()
+    if(len(images) <= 0):
+        print("NO IMAGES")
+        sys.exit()
     label = Label(image=images[0])
 
     button_back = Button(root, text="Back", command=back)
