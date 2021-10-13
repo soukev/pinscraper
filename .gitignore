@@ -1,2 +1,3 @@
 *.log
+*.sqlite
 downloaded_imgs/*
