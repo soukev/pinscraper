@@ -2,7 +2,6 @@
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from bs4 import BeautifulSoup
 from time import sleep
 import os
 import sys
@@ -24,9 +23,13 @@ def download_images(url_list, dbfile='data.sqlite'):
         c.execute('''CREATE TABLE IF NOT EXISTS images
                     (id TEXT, file_name TEXT, custom_title TEXT, url TEXT, img_url TEXT, PRIMARY KEY(id,url))''')
         c.execute('''CREATE INDEX IF NOT EXISTS idx_id ON images (id)''')
+        conn.commit()
 
         for pic_url in url_list:
             current_dir = os.path.join(os.curdir, "downloaded_imgs")
+            if not os.path.exists(current_dir):
+                os.makedirs(current_dir)
+
             pic_name = pic_url.rsplit('/', 1)[-1]
             c.execute('SELECT id, file_name, custom_title, url, img_url FROM images WHERE img_url=?', (pic_url,))
             r = c.fetchone()
@@ -44,8 +47,7 @@ def download_images(url_list, dbfile='data.sqlite'):
 
                 c.execute(f"INSERT INTO images VALUES('{pic_name}', '{pic_name}', '', '{url}','{pic_url}')")
 
-
-
+        conn.commit()
 
 
 # Number of scrolls is needed, there is no good way to find end of board
@@ -57,7 +59,7 @@ def run(url, number_of_scrolls = 2, number_of_pics = -1):
     scrapped_list = []
     counting_pics = 0;
     while(1):
-        pic_list = browser.find_elements_by_xpath('//div[contains(@class, "PinCard__imageWrapper")]//div//div//div//div//img')
+        pic_list = browser.find_elements("xpath",'//div[contains(@class, "PinCard__imageWrapper")]//div//div//div//div//img')
         pic_url_list = [pic_elem.get_attribute('src') for pic_elem in pic_list]
         end = False
         for pic_url in pic_url_list:
@@ -78,8 +80,8 @@ def run(url, number_of_scrolls = 2, number_of_pics = -1):
 
 
         # scroll down
-        body = browser.find_element_by_css_selector('body')
-        for j in range(2):
+        body = browser.find_element("css selector", 'body')
+        for _ in range(2):
             body.send_keys(Keys.PAGE_DOWN)
 
         # hack to make it load

@@ -53,7 +53,7 @@ def get_images(dbfile='data.sqlite'):
         for row in r:
             try:
                 img = Image.open("downloaded_imgs/" + row[1])
-                height, width= img.size
+                height, _= img.size
                 # image is too big, change size
                 if (height > 900):
                     h = 900
