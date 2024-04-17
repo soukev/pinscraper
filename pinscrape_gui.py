@@ -57,11 +57,11 @@ def get_images(dbfile='data.sqlite'):
                 # image is too big, change size
                 if (height > 900):
                     h = 900
-                    ratio = 900 / img.height() # get ratio in percentage
-                    w = img.width() * ratio # change width and remain aspect ratio
-                    img.resize(w, h)
+                    ratio = 900 / img.height # get ratio in percentage
+                    w = int(img.width * ratio) # change width and remain aspect ratio
+                    img.resize((w, h))
                 images.append(ImageTk.PhotoImage(img))
-            except Exception as err:
+            except Exception as _:
                 continue
 
 
